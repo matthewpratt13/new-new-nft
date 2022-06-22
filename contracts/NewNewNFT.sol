@@ -24,7 +24,7 @@ contract NewNewNFT is ERC721, ERC721URIStorage, Pausable, Ownable {
     }
 
     function pause(uint256 tokenId, uint256 timePaused) public onlyOwner {
-        endPause = block.timestamp + timePaused;
+        endPause = block.timestamp + timePaused * 1 hours;
 
         require(
             tokenId == _tokenId(),

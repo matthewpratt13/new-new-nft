@@ -7,7 +7,6 @@ import { deployTestContract, getTestWallet } from "./test-helper";
 import * as provider from "../lib/provider";
 
 describe("NewNewNFT", () => {
-    const TOKEN_URI = "http://example.com/ip_records/42";
     let deployedContract: Contract;
     let wallet: Wallet;
 
