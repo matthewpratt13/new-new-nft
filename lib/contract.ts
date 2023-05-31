@@ -5,9 +5,9 @@ import { env } from "./env";
 import { getProvider } from "./provider";
 
 export function getContract(
-    name: string,
-    hre: HardhatRuntimeEnvironment
+  name: string,
+  hre: HardhatRuntimeEnvironment
 ): Promise<Contract> {
-    const WALLET = new ethers.Wallet(env("ETH_PRIVATE_KEY"), getProvider());
-    return getContractAt(hre, name, env("NFT_CONTRACT_ADDRESS"), WALLET);
+  const WALLET = new ethers.Wallet(env("ETH_PRIVATE_KEY"), getProvider());
+  return getContractAt(hre, name, env("NFT_CONTRACT_ADDRESS"), WALLET);
 }

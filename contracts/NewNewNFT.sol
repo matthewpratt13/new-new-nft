@@ -11,25 +11,18 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract NewNewNFT is ERC721, ERC721URIStorage, Pausable, Ownable {
     using Counters for Counters.Counter;
 
-    uint256 public constant MINT_PRICE = 2_000;
-    
+    uint256 constant MINT_PRICE = 2_000;
+
     Counters.Counter private _tokenIdCounter;
+    uint256 public _tokenId = _tokenIdCounter.current();
     uint256 endPause;
 
     constructor() ERC721("NewNewNFT", "NFT") {}
 
-    // custom method
-    function _tokenId() public view returns (uint256) {
-        return _tokenIdCounter.current();
-    }
-
     function pause(uint256 tokenId, uint256 timePaused) public onlyOwner {
         endPause = block.timestamp + timePaused * 1 hours;
 
-        require(
-            tokenId == _tokenId(),
-            "Invalid tokenId: unable to access external token"
-        );
+        require(tokenId == _tokenId, "Invalid tokenId: unable to access external token");
 
         if (block.timestamp < endPause) {
             _pause();
@@ -37,10 +30,7 @@ contract NewNewNFT is ERC721, ERC721URIStorage, Pausable, Ownable {
     }
 
     function unpause(uint256 tokenId) public onlyOwner whenPaused {
-        require(
-            tokenId == _tokenId(),
-            "Invalid tokenId: unable to access external token"
-        );
+        require(tokenId == _tokenId, "Invalid tokenId: unable to access external token");
 
         _unpause();
     }
@@ -48,47 +38,28 @@ contract NewNewNFT is ERC721, ERC721URIStorage, Pausable, Ownable {
     function safeMint(address to, string memory uri) public payable onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
 
-        require(
-            msg.value == MINT_PRICE,
-            "Transaction value did not equal the mint price"
-        );
+        require(msg.value == MINT_PRICE, "Transaction value did not equal the mint price");
 
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
 
-    function transfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public whenNotPaused {
+    function transfer(address from, address to, uint256 tokenId) public whenNotPaused {
         _transfer(from, to, tokenId);
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override whenNotPaused {
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override whenNotPaused {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721, ERC721URIStorage)
-    {
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 }

@@ -7,17 +7,17 @@ import { Contract, Wallet } from "ethers";
 chai.use(sinonChai);
 
 afterEach(() => {
-    sinon.restore();
+  sinon.restore();
 });
 
 export async function deployTestContract(name: string): Promise<Contract> {
-    const contractFactory = await hardhatEthers.getContractFactory(
-        name,
-        getTestWallet()
-    );
-    return await contractFactory.deploy();
+  const contractFactory = await hardhatEthers.getContractFactory(
+    name,
+    getTestWallet()
+  );
+  return await contractFactory.deploy();
 }
 
 export function getTestWallet(): Wallet {
-    return waffle.provider.getWallets()[0];
+  return waffle.provider.getWallets()[0];
 }
